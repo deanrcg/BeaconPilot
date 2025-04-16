@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f1ec;
+    }
+
+    #chatbox {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      height: 420px;
+      border-radius: 10px;
+      border: 1px solid #dcd9d2;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      color: #2d4239;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    #form {
+      display: flex;
+      border-top: 1px solid #e0ddd8;
+    }
+
+    #input {
+      flex-grow: 1;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      background: #f9f9f8;
+      color: #2d4239;
+    }
+
+    #input:focus {
+      outline: none;
+    }
+
+    #send {
+      border: none;
+      background-color: #d39d5c;
+      color: white;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+
+    .user, .bot {
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .user::before {
+      content: "You: ";
+      font-weight: bold;
+    }
+
+    .bot::before {
+      content: "SupportBot: ";
+      font-weight: bold;
+      color: #2d4239;
+    }
+  </style>
+</head>
+<body>
+  <div id="chatbox">
+    <div id="messages"></div>
+    <form id="form">
+      <input id="input" placeholder="Ask a question..." autocomplete="off" />
+      <button id="send" type="submit">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const messages = document.getElementById("messages");
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+    
+    // Get base URL from current script
+    const baseUrl = window.location.origin;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      
+      appendMessage("user", text);
+      input.value = "";
+
+      try {
+        const res = await fetch(`${baseUrl}/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: text })
+        });
+
+        const data = await res.json();
+        appendMessage("bot", data.answer || "Sorry, something went wrong.");
+      } catch (error) {
+        console.error('Error:', error);
+        appendMessage("bot", "Sorry, I encountered an error. Please try again.");
+      }
+    });
+
+    function appendMessage(sender, text) {
+      const div = document.createElement("div");
+      div.className = sender;
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      
+      // Notify parent about content height change
+      window.parent.postMessage({
+        type: 'resize',
+        height: document.body.scrollHeight
+      }, '*');
+    }
+  </script>
+</body>
+</html> 

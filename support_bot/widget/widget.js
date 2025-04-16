@@ -11,14 +11,14 @@
     bottom: 20px;
     right: 20px;
     padding: 12px 24px;
-    background: #007bff;
+    background: #d39d5c;
     color: white;
     border: none;
     border-radius: 25px;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     font-size: 14px;
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     z-index: 999999;
   `;
@@ -33,7 +33,7 @@
     height: 440px;
     border: none;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 999999;
     transition: all 0.3s ease;
     opacity: 0;
@@ -56,7 +56,7 @@
     iframe.style.transform = isOpen ? "translateY(0)" : "translateY(20px)";
     iframe.style.pointerEvents = isOpen ? "auto" : "none";
     button.innerHTML = isOpen ? "Close chat" : "Chat with us";
-    button.style.background = isOpen ? "#dc3545" : "#007bff";
+    button.style.background = isOpen ? "#2d4239" : "#d39d5c";
   });
   
   // Handle messages from iframe
