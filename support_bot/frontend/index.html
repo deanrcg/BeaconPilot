@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SupportBot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      display: flex; flex-direction: column; height: 100vh;
+    }
+    #chat {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f4f4f4;
+    }
+    .message {
+      margin-bottom: 15px;
+    }
+    .user { font-weight: bold; color: #333; }
+    .bot { color: #0066cc; }
+    #form {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    #input {
+      flex-grow: 1;
+      padding: 10px;
+      border: none;
+      font-size: 16px;
+    }
+    #submit {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #0066cc;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat"></div>
+  <form id="form">
+    <input type="text" id="input" placeholder="Ask a question..." autocomplete="off" required />
+    <button type="submit" id="submit">Send</button>
+  </form>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const question = input.value.trim();
+      if (!question) return;
+
+      appendMessage("user", question);
+      input.value = "";
+
+      appendMessage("bot", "Thinking...");
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: question }),
+        });
+
+        const data = await response.json();
+        Array.from(document.querySelectorAll(".bot")).slice(-1)[0].textContent = "SupportBot: " + (data.answer || "Sorry, something went wrong.");
+      } catch (error) {
+        console.error('Error:', error);
+        Array.from(document.querySelectorAll(".bot")).slice(-1)[0].textContent = "SupportBot: Error fetching response.";
+      }
+    });
+
+    function appendMessage(sender, text) {
+      const div = document.createElement("div");
+      div.classList.add("message", sender);
+      div.textContent = sender === "user" ? "You: " + text : "SupportBot: " + text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+</body>
+</html> 

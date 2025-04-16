@@ -1,0 +1,33 @@
+Technology Stack for Support Bot
+
+Backend Framework:
+- FastAPI (v0.115.9) - Modern, fast web framework for building APIs with Python
+- Uvicorn (v0.34.1) - Lightning-fast ASGI server implementation
+
+AI and Machine Learning:
+- LangChain (v0.3.23) - Framework for developing applications powered by language models
+- OpenAI (v1.74.0) - OpenAI's API client for accessing GPT models
+- Tiktoken (v0.9.0) - OpenAI's tokenizer library for text processing
+
+Vector Database:
+- ChromaDB (v1.0.4) - Open-source embedding database for AI applications
+
+Data Processing:
+- NumPy (v2.2.4) - Fundamental package for scientific computing with Python
+- Pydantic (v2.33.1) - Data validation using Python type annotations
+
+Environment and Configuration:
+- Python-dotenv (v1.1.0) - Management of environment variables from .env files
+
+Key Features:
+- Built with modern Python async capabilities
+- REST API support through FastAPI
+- Vector similarity search for document retrieval
+- Secure environment variable management
+- Type-safe data validation and serialization
+- Efficient token management for LLM interactions
+
+Development Environment:
+- Python 3.11+
+- Windows 10/11 compatible
+- Virtual environment recommended for dependency isolation 

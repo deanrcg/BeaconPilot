@@ -1,0 +1,66 @@
+// Add event listener to the form
+document.querySelector('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const userInput = document.getElementById('user-input').value;
+    if (!userInput.trim()) return;
+
+    // Add user message to chat
+    addMessage('user', userInput);
+    
+    // Clear input
+    document.getElementById('user-input').value = '';
+
+    // Show loading state
+    const loadingMessage = addMessage('bot', 'Thinking...');
+    
+    try {
+        const response = await fetch('http://localhost:8000/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: userInput })
+        });
+
+        const data = await response.json();
+        
+        // Remove loading message
+        loadingMessage.remove();
+        
+        // Add bot response
+        addMessage('bot', data.answer || data.error || 'Sorry, I encountered an error.');
+    } catch (error) {
+        // Remove loading message
+        loadingMessage.remove();
+        
+        // Add error message
+        addMessage('bot', 'Sorry, I encountered an error. Please try again.');
+        console.error('Error:', error);
+    }
+});
+
+// Function to add a message to the chat
+function addMessage(sender, text) {
+    const chatMessages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}`;
+    messageDiv.textContent = text;
+    chatMessages.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    return messageDiv;
+}
+
+// Add event listener to FAQ buttons
+Array.from(document.querySelectorAll('.faq-button')).forEach(button => {
+    button.addEventListener('click', async () => {
+        const question = button.textContent;
+        document.getElementById('user-input').value = question;
+        
+        // Trigger form submission
+        document.querySelector('form').dispatchEvent(new Event('submit'));
+    });
+}); 
