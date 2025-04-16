@@ -61,25 +61,30 @@ async def ask_question(q: Question):
 async def health_check():
     return {"status": "healthy"}
 
-# Serve widget files
-@app.get("/widget")
-async def serve_widget():
-    return FileResponse(current_dir / "widget" / "index.html")
+# Mount static files
+app.mount("/static", StaticFiles(directory=str(current_dir / "widget" / "static"), html=True))
 
-@app.get("/widget.js")
+# Serve widget files with correct MIME types
+@app.get("/widget.js", response_class=FileResponse)
 async def serve_widget_js():
     return FileResponse(
         current_dir / "widget" / "widget.js",
         media_type="application/javascript"
     )
 
-@app.get("/test")
-async def serve_test_page():
-    return FileResponse(current_dir / "widget" / "test.html")
+@app.get("/widget", response_class=FileResponse)
+async def serve_widget():
+    return FileResponse(
+        current_dir / "widget" / "index.html",
+        media_type="text/html"
+    )
 
-# Mount static files
-app.mount("/static", StaticFiles(directory=str(current_dir / "widget"), name="static"))
-app.mount("/widget-js", StaticFiles(directory=str(current_dir / "widget"), html=False), name="widget-js")
+@app.get("/test", response_class=FileResponse)
+async def serve_test_page():
+    return FileResponse(
+        current_dir / "widget" / "test.html",
+        media_type="text/html"
+    )
 
 if __name__ == "__main__":
     import uvicorn
