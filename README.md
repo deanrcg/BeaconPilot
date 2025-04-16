@@ -72,6 +72,12 @@ See `.env.example` for required environment variables:
 
 ![BeaconPilot Demo](demo.png)
 
+Example interaction:
+```
+User: Do I need planning permission?
+Bot: No, planning permission is not usually required as our studios fall under permitted development.
+```
+
 ## Tech Stack
 
 - FastAPI for the backend
