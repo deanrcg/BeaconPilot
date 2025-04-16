@@ -1,8 +1,11 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import Chroma
@@ -21,19 +24,19 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],  # In production, replace with specific domains
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+
+# Get the directory containing main.py
+current_dir = Path(__file__).parent
 
 # Embed and store FAQ data
 embedding_model = OpenAIEmbeddings()
-
 docs = [Document(page_content=f"{item['question']} {item['answer']}") for item in faq_chunks]
-
 vector_db = Chroma.from_documents(docs, embedding=embedding_model, persist_directory="./db")
-vector_db.persist()
 
 # Setup QA chain
 qa_chain = RetrievalQA.from_chain_type(
@@ -57,6 +60,25 @@ async def ask_question(q: Question):
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+# Serve widget files
+@app.get("/widget")
+async def serve_widget():
+    return FileResponse(current_dir / "widget" / "index.html")
+
+@app.get("/widget.js")
+async def serve_widget_js():
+    return FileResponse(
+        current_dir / "widget" / "widget.js",
+        media_type="application/javascript"
+    )
+
+@app.get("/test")
+async def serve_test_page():
+    return FileResponse(current_dir / "widget" / "test.html")
+
+# Mount static files last to avoid conflicts
+app.mount("/static", StaticFiles(directory=str(current_dir / "widget")), name="static")
 
 if __name__ == "__main__":
     import uvicorn
