@@ -31,12 +31,18 @@
       border-bottom: 1px solid #e0ddd8;
       background: white;
       border-radius: 10px 10px 0 0;
+      position: relative;
+      overflow: hidden;
     }
 
     #logo {
       width: 150px;
       display: block;
       margin: 0 auto;
+      object-fit: contain;
+      background: transparent;
+      position: relative;
+      z-index: 1;
     }
 
     #messages {
@@ -91,7 +97,7 @@
 <body>
   <div id="chatbox">
     <div id="header">
-      <img id="logo" src="/static/booths.png" alt="Booths logo">
+      <img id="logo" src="/static/booths.png?v=2" alt="Booths">
     </div>
     <div id="messages"></div>
     <form id="form">
@@ -107,6 +113,11 @@
     
     // Get base URL from current script
     const baseUrl = window.location.origin;
+
+    // Add welcome message when the widget loads
+    document.addEventListener('DOMContentLoaded', () => {
+      appendMessage("bot", "Welcome to Booths, how can I help you?");
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>General Settings</h5>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="siteName" class="form-label">Site Name</label>
+                        <input type="text" class="form-control" id="siteName" value="Support Bot">
+                    </div>
+                    <div class="mb-3">
+                        <label for="adminEmail" class="form-label">Admin Email</label>
+                        <input type="email" class="form-control" id="adminEmail" value="admin@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="timezone" class="form-label">Timezone</label>
+                        <select class="form-select" id="timezone">
+                            <option value="UTC">UTC</option>
+                            <option value="GMT">GMT</option>
+                            <option value="EST">EST</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Security Settings</h5>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Change Password</label>
+                        <input type="password" class="form-control" id="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="twoFactor">
+                            <label class="form-check-label" for="twoFactor">
+                                Enable Two-Factor Authentication
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Security</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>API Settings</h5>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="openaiKey" class="form-label">OpenAI API Key</label>
+                        <input type="password" class="form-control" id="openaiKey" value="sk-...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="model" class="form-label">Default Model</label>
+                        <select class="form-select" id="model">
+                            <option value="gpt-4">GPT-4</option>
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save API Settings</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

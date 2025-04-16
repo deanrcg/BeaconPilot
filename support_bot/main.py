@@ -13,6 +13,7 @@ from langchain.schema import Document
 from langchain.chains import RetrievalQA
 
 from faq_data import faq_chunks
+from admin.routes import router as admin_router
 
 # Load environment variables
 load_dotenv()
@@ -62,7 +63,11 @@ async def health_check():
     return {"status": "healthy"}
 
 # Mount static files
-app.mount("/static", StaticFiles(directory=str(current_dir / "widget" / "static"), html=True))
+app.mount("/static", StaticFiles(directory=str(current_dir / "widget" / "static")), name="static")
+app.mount("/admin/static", StaticFiles(directory=str(current_dir / "admin" / "static")), name="admin_static")
+
+# Include admin routes
+app.include_router(admin_router)
 
 # Serve widget files with correct MIME types
 @app.get("/widget.js", response_class=FileResponse)
