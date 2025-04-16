@@ -77,8 +77,9 @@ async def serve_widget_js():
 async def serve_test_page():
     return FileResponse(current_dir / "widget" / "test.html")
 
-# Mount static files last to avoid conflicts
-app.mount("/static", StaticFiles(directory=str(current_dir / "widget")), name="static")
+# Mount static files
+app.mount("/static", StaticFiles(directory=str(current_dir / "widget"), name="static"))
+app.mount("/widget-js", StaticFiles(directory=str(current_dir / "widget"), html=False), name="widget-js")
 
 if __name__ == "__main__":
     import uvicorn
